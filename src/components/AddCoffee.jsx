@@ -1,6 +1,14 @@
 import './addCoffee.css'
 
-export default function AddCoffee() {
+export default function AddCoffee({ setCoffees }) {
+
+const getCoffees = () => {
+  fetch('https://first-deployed-api-c12.web.app/coffees')
+  .then(res => res.json())
+  .then(data => setCoffees(data))
+  .catch(alert)
+  
+}
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -23,9 +31,19 @@ export default function AddCoffee() {
         body: JSON.stringify(newCoffee),
     })
     .then(res => res.json())
-    .then(message => console.log(message))
+    .then(data => {
+      // check if the message is "Success!"
+      if(data.message === "Success!") {
+// our coffee was added successfully
+// let's clear the form
+e.target.name.value = ""
+e.target.recipe.value = ""
+e.target.description.value = ""
+// and then get updated list of coffees
+getCoffees()
+      }
+    })
     .catch(alert)
-
   }
   return (
     <section className="coffee-form">
